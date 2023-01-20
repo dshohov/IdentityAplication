@@ -14,8 +14,17 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkSto
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<ISendGridEmail, SendGridEmail>();
 builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration.GetSection("SendGrid"));
-
-
+builder.Services.AddAuthentication()
+.AddFacebook(options =>
+{
+    options.AppId = "611227601011839";
+    options.AppSecret = "2ada729ca9da5bc63edbba537a0debee";
+})
+.AddGoogle(options =>
+{
+    options.ClientId = "425521569160-4ahrps3rtg863e10bnsfh9bo893nkrts.apps.googleusercontent.com";
+    options.ClientSecret = "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";
+});
 builder.Services.Configure<IdentityOptions>(opt => 
 {
     opt.Password.RequiredLength = 5;
