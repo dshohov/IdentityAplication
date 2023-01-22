@@ -11,12 +11,12 @@ namespace IdentityApp.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
         private readonly ISendGridEmail _sendGridEmail;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public AccountController(UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+        public AccountController(UserManager<AppUser> userManager,
+            SignInManager<AppUser> signInManager,
             RoleManager<IdentityRole> roleManager,
             ISendGridEmail sendGridEmail)
         {
@@ -76,7 +76,7 @@ namespace IdentityApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(loginViewModel.UserName, loginViewModel.Password, loginViewModel.RememberMe, lockoutOnFailure: true);
+                var result = await _signInManager.PasswordSignInAsync(loginViewModel.UserName, loginViewModel.Password, loginViewModel.RememberMe, lockoutOnFailure: true); 
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index", "Home");
@@ -138,7 +138,7 @@ namespace IdentityApp.Controllers
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new AppUser { Email = registerViewModel.Email, UserName = registerViewModel.UserName };
+                var user = new AppUser { Email = registerViewModel.Email, NickName = registerViewModel.UserName, UserName = registerViewModel.UserName };
                 var result = await _userManager.CreateAsync(user, registerViewModel.Password);
                 if (result.Succeeded)
                 {
@@ -172,7 +172,7 @@ namespace IdentityApp.Controllers
                 {
                     return View("Error");
                 }
-                var user = new AppUser { UserName = model.Name, Email = model.Email };
+                var user = new AppUser { UserName = model.Name, NickName = model.Name, Email = model.Email };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
