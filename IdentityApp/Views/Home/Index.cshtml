@@ -7,12 +7,16 @@
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 @if(User.Identity.IsAuthenticated){
-    @if (User.IsInRole("Pokemon"))
+    @if (User.IsInRole("User"))
     {
-        <h3>Your role is pokemon</h3>
+        <h3>Your role is hgj</h3>
     }
-    else
+    @if(User.IsInRole("Admin"))
     {
-        <h3>Your role is pokemon trainer</h3>
+         <h3>Your role is Admin</h3>
+    }
+    @if(User.IsInRole("SuperAdmin"))
+    {
+        <h3>Your role is SuperAdmin</h3>
     }
 }

@@ -120,21 +120,27 @@ namespace IdentityApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Register(string returnUrl = null)
         {
-            if(!await _roleManager.RoleExistsAsync("Pokemon"))
+            if(!await _roleManager.RoleExistsAsync("User"))
             {
-                await _roleManager.CreateAsync(new IdentityRole("Pokemon"));
-                await _roleManager.CreateAsync(new IdentityRole("Trainer"));
+                await _roleManager.CreateAsync(new IdentityRole("User"));
+                await _roleManager.CreateAsync(new IdentityRole("Admin"));
+                await _roleManager.CreateAsync(new IdentityRole("SuperAdmin"));
             }
             List<SelectListItem> listItems = new List<SelectListItem>();
             listItems.Add(new SelectListItem()
             {
-                Value="Pokemon",
-                Text = "Pokemon"
+                Value= "User",
+                Text = "User"
             });
             listItems.Add(new SelectListItem()
             {
-                Value = "Trainer",
-                Text = "Trainer"
+                Value = "Admin",
+                Text = "Admin"
+            });
+            listItems.Add(new SelectListItem()
+            {
+                Value = "SuperAdmin",
+                Text = "SuperAdmin"
             });
             RegisterViewModel registerViewModel = new RegisterViewModel();
             registerViewModel.RoleList = listItems; 
@@ -158,13 +164,17 @@ namespace IdentityApp.Controllers
                 var result = await _userManager.CreateAsync(user, registerViewModel.Password);
                 if (result.Succeeded)
                 {
-                    if(registerViewModel.RoleSelected != null && registerViewModel.RoleSelected.Length > 0 && registerViewModel.RoleSelected == "Trainer")
+                    if(registerViewModel.RoleSelected != null && registerViewModel.RoleSelected.Length > 0 && registerViewModel.RoleSelected == "SuperAdmin")
                     {
-                        await _userManager.AddToRoleAsync(user, "Trainer");
+                        await _userManager.AddToRoleAsync(user, "SuperAdmin");
                     }
-                    else
+                    if (registerViewModel.RoleSelected != null && registerViewModel.RoleSelected.Length > 0 && registerViewModel.RoleSelected == "Admin")
                     {
-                        await _userManager.AddToRoleAsync(user, "Pokemon");
+                        await _userManager.AddToRoleAsync(user, "Admin");
+                    }
+                    if(registerViewModel.RoleSelected != null && registerViewModel.RoleSelected.Length > 0 && registerViewModel.RoleSelected == "User")
+                    {
+                        await _userManager.AddToRoleAsync(user, "User");
                     }
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(returnUrl);
@@ -197,6 +207,7 @@ namespace IdentityApp.Controllers
 
                     if (result.Succeeded)
                     {
+                        await _userManager.AddToRoleAsync(user, "User");
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         await _signInManager.UpdateExternalAuthenticationTokensAsync(info);
                         return LocalRedirect(returnurl);
