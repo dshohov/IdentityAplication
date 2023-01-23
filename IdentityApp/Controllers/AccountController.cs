@@ -2,10 +2,13 @@
 using IdentityApp.Models;
 using IdentityApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
+using System.Web;
 
 namespace IdentityApp.Controllers
 {
@@ -41,6 +44,17 @@ namespace IdentityApp.Controllers
         [HttpGet]
         public IActionResult ResetPassword(string code = null)
         {
+            string currentUrl = HttpContext.Request.GetEncodedUrl();
+            string userId = null;
+            string pattern = @"userId=([^&]+)";
+            Match match = Regex.Match(currentUrl, pattern);
+            if (match.Success)
+            {
+                userId = match.Groups[1].Value;
+
+            }
+            var emailUser = _userManager.Users.First(c => c.Id == userId).Email;
+            ViewData["Email"] = emailUser;
             return code == null ? View("Error") : View();
         }
         [HttpPost]
@@ -53,6 +67,7 @@ namespace IdentityApp.Controllers
                 if (user == null)
                 {
                     ModelState.AddModelError("Email", "User not found");
+                    ViewData["Email"] = resetPasswordViewModel.Email;
                     return View();
                 }
                 var result = await _userManager.ResetPasswordAsync(user, resetPasswordViewModel.Code, resetPasswordViewModel.Password);
@@ -61,6 +76,7 @@ namespace IdentityApp.Controllers
                     return RedirectToAction("ResetPasswordConfirmation", "Account");
                 }
             }
+            ViewData["Email"] = resetPasswordViewModel.Email;
             return View(resetPasswordViewModel);
         }
 
