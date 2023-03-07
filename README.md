@@ -14,6 +14,7 @@ A training project in which I analyzed the topic of authorization and user authe
 - [Html](https://www.w3schools.com/html/)
 - [Css](https://www.w3schools.com/Css/)
 - [Bootstrap](https://getbootstrap.com/)
+- [MS SQL](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
 
 ## Helpers
 - [SendGrid Api(To send emails)](https://sendgrid.com/)
