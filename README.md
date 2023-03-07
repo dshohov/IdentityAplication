@@ -4,11 +4,9 @@ A training project in which I analyzed the topic of authorization and user authe
 ## Content
 - [Technologies](#Technologies)
 - [Helpers](#Helpers)
-- [Deploy и CI/CD](#deploy-и-ci/cd)
 - [Contributing](#contributing)
 - [Why was this project developed](#why-was-this-project-developed)
 - [The project team](#the-project-team)
-- [Sources](#sources)
 
 ## Technologies
 - [C#](https://learn.microsoft.com/en-us/dotnet/csharp/)
